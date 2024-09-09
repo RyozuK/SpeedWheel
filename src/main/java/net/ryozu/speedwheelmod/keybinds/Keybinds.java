@@ -22,16 +22,14 @@ public class Keybinds {
     public final KeyMapping speed_up_key = new KeyMapping(
             UP_KEY,
             KeyConflictContext.IN_GAME,
-            InputConstants.Type.MOUSE,
-            241,
+            InputConstants.getKey(InputConstants.KEY_APOSTROPHE, -1),
             CATEGORY
     );
 
     public final KeyMapping speed_down_key = new KeyMapping(
             DOWN_KEY,
             KeyConflictContext.IN_GAME,
-            InputConstants.Type.MOUSE,
-            242,
+            InputConstants.getKey(InputConstants.KEY_SEMICOLON, -1),
             CATEGORY
     );
 

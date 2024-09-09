@@ -10,29 +10,47 @@ public class Config
 {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    private static final ForgeConfigSpec.DoubleValue SPEED_MAX = BUILDER
-            .comment("Maximum speed multiplier for player. 0.0 is normal speed, 1.0 is double speed")
-            .defineInRange("speedMax", 0.1, -1.0, 10.0);
-    private static final ForgeConfigSpec.DoubleValue SPEED_MIN = BUILDER
-            .comment("Minimum speed multiplier, -1.0 means not moving")
-            .defineInRange("speedMin", -0.75, -1.0, 0.0);
-    private static final ForgeConfigSpec.DoubleValue SPEED_STEP = BUILDER
+    private static final ForgeConfigSpec.IntValue SPEED_MAX = BUILDER
+            .comment("Maximum speed multiplier for player. 100 is normal speed, 200 is double speed")
+            .defineInRange("speedMax", 110, 100, 1000);
+    private static final ForgeConfigSpec.IntValue SPEED_MIN = BUILDER
+            .comment("Minimum speed multiplier, 0 means not moving")
+            .defineInRange("speedMin", 25, 0, 100);
+    private static final ForgeConfigSpec.IntValue SPEED_STEP = BUILDER
             .comment("Amount to change the speed multiplier each time.")
-            .defineInRange("speedStep", 0.05, 0.01,10.0);
+            .defineInRange("speedStep", 5, 1,100);
     private static final ForgeConfigSpec.BooleanValue MOD_KEY = BUILDER
             .comment("Is mod key needed for keybinds? (Always needed for mouse wheel)")
             .define("needsModKey", false);
+    private static final ForgeConfigSpec.IntValue CONFIG_VERSION = BUILDER
+            .comment("Used to invalidate old configs, changing this value will cause a config reset")
+            .defineInRange("configVer", 0, 0, 1000);
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
-    public static double speedMax;
-    public static double speedMin;
-    public static double speedStep;
+    public static int speedMax;
+    public static int speedMin;
+    public static int speedStep;
     public static boolean needsModKey;
+    public static int configVer;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
     {
+        int targetVersion = 1;
+        configVer = CONFIG_VERSION.get();
+
+        if (configVer != targetVersion) {
+            CONFIG_VERSION.set(targetVersion);
+            SPEED_MAX.set(SPEED_MAX.getDefault());
+            SPEED_MIN.set(SPEED_MIN.getDefault());
+            SPEED_STEP.set(SPEED_STEP.getDefault());
+            CONFIG_VERSION.save();
+            SPEED_MAX.save();
+            SPEED_MIN.save();
+            SPEED_STEP.save();
+        }
+
         speedMax = SPEED_MAX.get();
         speedMin = SPEED_MIN.get();
         speedStep = SPEED_STEP.get();

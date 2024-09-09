@@ -4,15 +4,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.ryozu.speedwheelmod.Config;
 
 public class PlayerSpeedMod {
-    private double speed = bound(0.0, Config.speedMin, Config.speedMax);
+    private double speed = bound(100, Config.speedMin, Config.speedMax);
 
     public double bound(double value, double min, double max) {
         return Math.min(Math.max(min, value), max);
     }
 
     public double getSpeed() {
-        //Technically, 0.0 is natural speed, so -1 = no movement, and +1 = double movement. So let's change the config values instead of doing something silly here.
-        return speed;
+        //Technically, 0.0 is natural speed, so -1 = no movement, and +1 = double movement.
+        // Config values however treat 100 as natural speed and 200 as double (IE percentage)
+        return (speed - 100) / 100.0;
     }
 
     public int getSpeedPercent() {
